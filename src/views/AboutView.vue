@@ -1,5 +1,17 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <UserProfile />
 </template>
+
+<script>
+import { defineComponent } from "vue";
+
+import UserProfile from "@/components/UserProfile";
+
+export default defineComponent({
+  name: "AboutView",
+
+  components: {
+    UserProfile,
+  },
+});
+</script>
