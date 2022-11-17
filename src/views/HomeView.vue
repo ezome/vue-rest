@@ -1,17 +1,17 @@
 <template>
-  <UserCreate />
+  <CreateUserForm />
 </template>
 
 <script>
 import { defineComponent } from "vue";
 
-import UserCreate from "@/components/UserCreate.vue";
+import CreateUserForm from "@/components/CreateUserForm.vue";
 
 export default defineComponent({
   name: "HomeView",
 
   components: {
-    UserCreate,
+    CreateUserForm,
   },
 });
 </script>

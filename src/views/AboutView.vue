@@ -1,17 +1,17 @@
 <template>
-  <UserProfile />
+  <EditUserForm />
 </template>
 
 <script>
 import { defineComponent } from "vue";
 
-import UserProfile from "@/components/UserProfile";
+import EditUserForm from "@/components/EditUserForm";
 
 export default defineComponent({
   name: "AboutView",
 
   components: {
-    UserProfile,
+    EditUserForm,
   },
 });
 </script>

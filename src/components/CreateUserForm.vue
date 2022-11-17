@@ -1,18 +1,18 @@
 <template>
   <template v-if="invalid">
-    <UserFormComponent :isPhone="false" @submitQuery="create" />
+    <UserForm :isPhone="false" @submitQuery="create" />
   </template>
   <h2 v-else>Вы уже создали пользователя</h2>
 </template>
 
 <script>
-import UserFormComponent from "@/components/UserFormComponent.vue";
+import UserForm from "@/components/UserForm.vue";
 import { createNewUserApi } from "@/api/user";
 import { ref, onMounted } from "vue";
 
 export default {
   components: {
-    UserFormComponent,
+    UserForm,
   },
 
   setup() {

@@ -1,14 +1,14 @@
 <template>
-  <UserFormComponent :isPhone="true" @submitQuery="update" />
+  <UserForm :isPhone="true" @submitQuery="update" />
 </template>
 
 <script>
-import UserFormComponent from "@/components/UserFormComponent.vue";
+import UserForm from "@/components/UserForm.vue";
 import { updateCurrentUserApi } from "@/api/user";
 
 export default {
   components: {
-    UserFormComponent,
+    UserForm,
   },
 
   setup() {
