@@ -3,26 +3,22 @@
     <v-text-field
       v-model="newProfile.lastName"
       :rules="rules.name"
-      :placeholder="currentProfile.lastName"
       label="lastName"
     ></v-text-field>
     <v-text-field
       v-model="newProfile.firstName"
       :rules="rules.name"
-      :placeholder="currentProfile.lastName"
       label="firstName"
     ></v-text-field>
     <v-text-field
       v-model="newProfile.middleName"
       :rules="rules.name"
-      :placeholder="currentProfile.lastName"
       label="middleName"
     ></v-text-field>
     <v-text-field
       type="email"
       v-model="newProfile.email"
       :rules="rules.email"
-      :placeholder="currentProfile.lastName"
       label="E-mail"
     ></v-text-field>
     <template v-if="isPhone">
@@ -31,7 +27,6 @@
         v-maska="'+7 (###) ### ##-##'"
         v-model="newProfile.phoneNumber"
         :rules="rules.phoneNumber"
-        :placeholder="currentProfile.lastName"
         label="Phone Number"
       ></v-text-field>
     </template>
@@ -64,20 +59,45 @@ export default {
         email: "",
         phoneNumber: "",
       },
-      newProfile: {
-        lastName: "",
-        firstName: "",
-        middleName: "",
-        email: "",
-        phoneNumber: "",
-      },
+      newProfile: {},
     };
   },
 
   computed: {
-    fullName() {
-      return `${this.newProfile.lastName.trim()} ${this.newProfile.firstName.trim()} ${this.newProfile.middleName.trim()}`;
+    fullName: {
+      get() {
+        const lastName =
+          this.newProfile.lastName || this.currentProfile.lastName;
+        const firstName =
+          this.newProfile.firstName || this.currentProfile.firstName;
+        const middleName =
+          this.newProfile.middleName || this.currentProfile.middleName;
+
+        return `${lastName.trim()} ${firstName.trim()} ${middleName.trim()}`;
+      },
+      set(newValue) {
+        const names = newValue.split(" ");
+
+        this.newProfile.lastName = names[0];
+        this.newProfile.firstName = names[1];
+        this.newProfile.middleName = names[2];
+      },
     },
+  },
+
+  mounted() {
+    const names = localStorage.name.split(" ");
+
+    const profile = {};
+
+    profile.lastName = names[0];
+    profile.firstName = names[1];
+    profile.middleName = names[2];
+
+    profile.email = localStorage.email;
+    profile.phoneNumber = localStorage.phoneNumber;
+
+    this.newProfile = this.currentProfile = profile;
   },
 
   methods: {
@@ -86,17 +106,12 @@ export default {
 
       const profile = {
         name: this.fullName,
-        email: this.email,
+        email: this.newProfile.email,
       };
 
-      if (this.phoneNumber) profile.phoneNumber = this.phoneNumber;
-
-      /*
-
-        при отсутствии некоторых полей name брать из полученного и распарсенного с сервера и формировать fullName
-        можно пройти циклом по name: { last: "", first: "", middle: "" }
-      
-      */
+      if (this.isPhone && this.newProfile.phoneNumber) {
+        profile.phoneNumber = this.newProfile.phoneNumber;
+      }
 
       if (valid) {
         this.$emit("submitQuery", profile);

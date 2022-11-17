@@ -1,5 +1,5 @@
 <template>
-  <template v-if="invalid">
+  <template v-if="show">
     <UserForm :isPhone="false" @submitQuery="create" />
   </template>
   <h2 v-else>Вы уже создали пользователя</h2>
@@ -7,8 +7,7 @@
 
 <script>
 import UserForm from "@/components/UserForm.vue";
-import { createNewUserApi } from "@/api/user";
-import { ref, onMounted } from "vue";
+import { useCreateNewUser } from "@/composables/useQueryCreateNewUser";
 
 export default {
   components: {
@@ -16,25 +15,10 @@ export default {
   },
 
   setup() {
-    const create = async (data) => {
-      try {
-        const response = await createNewUserApi(data);
-
-        localStorage.name = response.data.name;
-        localStorage.email = response.data.email;
-        localStorage.token = response.data["auth_key"];
-      } catch (err) {
-        alert(err.response?.data?.message);
-      }
-    };
-
-    const invalid = ref(false);
-    onMounted(() => {
-      if (!localStorage.token) invalid.value = true;
-    });
+    const { show, create } = useCreateNewUser();
 
     return {
-      invalid,
+      show,
       create,
     };
   },

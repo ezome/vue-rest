@@ -4,7 +4,8 @@
 
 <script>
 import UserForm from "@/components/UserForm.vue";
-import { updateCurrentUserApi } from "@/api/user";
+import { useUpdateCurrentUser } from "@/composables/useQueryUpdateCurrentUser";
+import { useGetCurrentUser } from "@/composables/useQueryGetCurrentUser";
 
 export default {
   components: {
@@ -12,23 +13,13 @@ export default {
   },
 
   setup() {
-    const update = async (data) => {
-      try {
-        const response = await updateCurrentUserApi(data);
+    const { update } = useUpdateCurrentUser();
 
-        localStorage.name = response.data.name;
-        localStorage.email = response.data.email;
-        localStorage.phoneNumber = response.data.phoneNumber;
-        localStorage.token = response.data["auth_key"];
-
-        console.log(response);
-      } catch (err) {
-        alert(err.response?.data?.message);
-      }
-    };
+    const { read } = useGetCurrentUser();
 
     return {
       update,
+      read,
     };
   },
 };

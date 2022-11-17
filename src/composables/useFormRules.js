@@ -9,9 +9,9 @@ const ruleEmail = (v) => {
 };
 
 const rulePhoneNumber = (v) => {
-  const regexp = /^\+7\d{10}$/;
+  const regexp = /^\+7 \(\d{3}\) \d{3} \d{2}-\d{2}$/;
 
-  if (regexp.test(v.trim())) {
+  if (v.length === 0 || regexp.test(v)) {
     return true;
   }
 
@@ -21,14 +21,14 @@ const rulePhoneNumber = (v) => {
 const ruleName = (v) => {
   const regexp = /^[A-ZА-ЯЁ]{2,}$/i;
 
-  if (regexp.test(v.trim())) {
+  if (v.length === 0 || regexp.test(v.trim())) {
     return true;
   }
 
   return "Некорректное значение";
 };
 
-export function useFormRules() {
+export function useFormRules(isPhone) {
   const rules = {
     name: [],
     email: [],
@@ -38,11 +38,12 @@ export function useFormRules() {
   rules.name.push(ruleName);
   rules.email.push(ruleEmail);
   rules.phoneNumber.push(rulePhoneNumber);
-  /*
 
-    уточнить правило на небязательность в случае isPhone === true и v.length === 0
-  
-  */
+  if (!isPhone) {
+    rules.name.push((v) => v.length > 0 || "Обязательное поле");
+    rules.phoneNumber.push((v) => v.length > 0 || "Обязательное поле");
+  }
+
   return {
     rules,
   };
