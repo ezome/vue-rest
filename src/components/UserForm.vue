@@ -1,17 +1,17 @@
 <template>
   <v-form ref="form" @submit.prevent="createQuery" lazy-validation>
     <v-text-field
-      v-model="newProfile.lastName"
+      v-model.trim="newProfile.lastName"
       :rules="rules.name"
       label="lastName"
     ></v-text-field>
     <v-text-field
-      v-model="newProfile.firstName"
+      v-model.trim="newProfile.firstName"
       :rules="rules.name"
       label="firstName"
     ></v-text-field>
     <v-text-field
-      v-model="newProfile.middleName"
+      v-model.trim="newProfile.middleName"
       :rules="rules.name"
       label="middleName"
     ></v-text-field>
@@ -52,52 +52,23 @@ export default {
 
   data() {
     return {
-      currentProfile: {
+      newProfile: {
         lastName: "",
         firstName: "",
         middleName: "",
         email: "",
         phoneNumber: "",
       },
-      newProfile: {},
     };
   },
 
-  computed: {
-    fullName: {
-      get() {
-        const lastName =
-          this.newProfile.lastName || this.currentProfile.lastName;
-        const firstName =
-          this.newProfile.firstName || this.currentProfile.firstName;
-        const middleName =
-          this.newProfile.middleName || this.currentProfile.middleName;
-
-        return `${lastName.trim()} ${firstName.trim()} ${middleName.trim()}`;
-      },
-      set(newValue) {
-        const names = newValue.split(" ");
-
-        this.newProfile.lastName = names[0];
-        this.newProfile.firstName = names[1];
-        this.newProfile.middleName = names[2];
-      },
-    },
-  },
-
   mounted() {
-    const names = localStorage.name.split(" ");
+    const profile = localStorage;
 
-    const profile = {};
+    this.fullName(profile.name);
 
-    profile.lastName = names[0];
-    profile.firstName = names[1];
-    profile.middleName = names[2];
-
-    profile.email = localStorage.email;
-    profile.phoneNumber = localStorage.phoneNumber;
-
-    this.newProfile = this.currentProfile = profile;
+    this.newProfile.email = profile.email;
+    this.newProfile.phoneNumber = profile.phoneNumber;
   },
 
   methods: {
@@ -105,7 +76,7 @@ export default {
       const { valid } = await this.$refs.form.validate();
 
       const profile = {
-        name: this.fullName,
+        name: this.fullName(),
         email: this.newProfile.email,
       };
 
@@ -115,6 +86,23 @@ export default {
 
       if (valid) {
         this.$emit("submitQuery", profile);
+      }
+    },
+
+    fullName(v) {
+      if (v) {
+        const names = v.split(" ");
+
+        this.newProfile.lastName = names[0];
+        this.newProfile.firstName = names[1];
+        this.newProfile.middleName = names[2];
+      } else {
+        const lastName = this.newProfile.lastName || localStorage.lastName;
+        const firstName = this.newProfile.firstName || localStorage.firstName;
+        const middleName =
+          this.newProfile.middleName || localStorage.middleName;
+
+        return `${lastName} ${firstName} ${middleName}`;
       }
     },
   },

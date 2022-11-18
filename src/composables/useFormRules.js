@@ -1,32 +1,25 @@
-const ruleEmail = (v) => {
-  const regexp = /.+@.+/i;
-
-  if (regexp.test(v)) {
-    return true;
-  }
-
-  return "Некорректный email";
+const ruleParse = {
+  name: {
+    regexp: /^[A-ZА-ЯЁ]{2,}$/i,
+    message: "Некорректное имя",
+  },
+  email: {
+    regexp: /.+@.+/i,
+    message: "Некорректный email",
+  },
+  phoneNumber: {
+    regexp: /^\+7 \(\d{3}\) \d{3} \d{2}-\d{2}$/,
+    message: "Некорректный номер телефона",
+  },
 };
 
-const rulePhoneNumber = (v) => {
-  const regexp = /^\+7 \(\d{3}\) \d{3} \d{2}-\d{2}$/;
+const validateExpression = (value, regexp, errorMessage) => {
+  if (value?.length === 0 || regexp.test(value)) return true;
 
-  if (v.length === 0 || regexp.test(v)) {
-    return true;
-  }
-
-  return "Некорректный номер телефона";
+  return errorMessage;
 };
 
-const ruleName = (v) => {
-  const regexp = /^[A-ZА-ЯЁ]{2,}$/i;
-
-  if (v.length === 0 || regexp.test(v.trim())) {
-    return true;
-  }
-
-  return "Некорректное значение";
-};
+const validateException = (value) => value?.length > 0 || "Обязательное поле";
 
 export function useFormRules(isPhone) {
   const rules = {
@@ -35,13 +28,18 @@ export function useFormRules(isPhone) {
     phoneNumber: [],
   };
 
-  rules.name.push(ruleName);
-  rules.email.push(ruleEmail);
-  rules.phoneNumber.push(rulePhoneNumber);
+  for (let key in rules) {
+    const regexp = ruleParse[key].regexp;
+    const message = ruleParse[key].message;
+
+    const result = (value) => validateExpression(value, regexp, message);
+
+    rules[key].push(result);
+  }
 
   if (!isPhone) {
-    rules.name.push((v) => v.length > 0 || "Обязательное поле");
-    rules.phoneNumber.push((v) => v.length > 0 || "Обязательное поле");
+    rules.name.push(validateException);
+    rules.phoneNumber.push(validateException);
   }
 
   return {
