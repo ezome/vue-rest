@@ -2,7 +2,7 @@
   <template v-if="show">
     <UserForm :isPhone="false" @submitQuery="create" />
   </template>
-  <h2 v-else>Вы уже создали пользователя</h2>
+  <h2 v-else>Вы успешно создали пользователя</h2>
 </template>
 
 <script>

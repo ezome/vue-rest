@@ -4,7 +4,7 @@ const instance = axios.create({
   baseURL: `https://api.sitemap-generator.ru/test-api/`,
 });
 
-export class Request {
+class Request {
   constructor(url) {
     this.request = instance;
     this.url = url;
@@ -35,10 +35,4 @@ export class Request {
   }
 }
 
-// localStorage.name = data.name;
-//       localStorage.email = data.email;
-//       localStorage.token = data["auth_key"];
-
-// this.lastName = data.lastName;
-//     this.firstName = data.firstName;
-//     this.middleName = data.middleName;
+export const request = new Request("user");

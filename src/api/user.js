@@ -1,6 +1,4 @@
-import { Request } from "./request";
-
-export const request = new Request("user");
+import { request } from "./request";
 
 export const createNewUserApi = (data) => {
   return request.create(data);

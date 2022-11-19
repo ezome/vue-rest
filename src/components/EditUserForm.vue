@@ -1,5 +1,5 @@
 <template>
-  <UserForm :isPhone="true" @submitQuery="update" />
+  <UserForm :isPhone="true" :profile="profile" @submitQuery="update" />
 </template>
 
 <script>
@@ -13,13 +13,14 @@ export default {
   },
 
   setup() {
+    const { profile, read } = useGetCurrentUser();
+
     const { update } = useUpdateCurrentUser();
 
-    const { read } = useGetCurrentUser();
-
     return {
-      update,
+      profile,
       read,
+      update,
     };
   },
 };

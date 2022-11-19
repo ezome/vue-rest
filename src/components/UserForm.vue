@@ -36,75 +36,33 @@
 
 <script>
 import { useFormRules } from "@/composables/useFormRules";
+import { useFormValues } from "@/composables/useFormValues";
+import { useForm } from "@/composables/useForm";
 
 export default {
   props: {
     isPhone: Boolean,
+    profile: Object,
   },
 
-  setup(props) {
+  setup(props, context) {
+    const { form, newProfile, currentProfile } = useFormValues(props.profile);
+
     const { rules } = useFormRules(props.isPhone);
 
+    const { createQuery } = useForm(
+      form,
+      newProfile,
+      currentProfile,
+      context.emit
+    );
+
     return {
+      form,
       rules,
+      newProfile,
+      createQuery,
     };
-  },
-
-  data() {
-    return {
-      newProfile: {
-        lastName: "",
-        firstName: "",
-        middleName: "",
-        email: "",
-        phoneNumber: "",
-      },
-    };
-  },
-
-  mounted() {
-    const profile = localStorage;
-
-    this.fullName(profile.name);
-
-    this.newProfile.email = profile.email;
-    this.newProfile.phoneNumber = profile.phoneNumber;
-  },
-
-  methods: {
-    async createQuery() {
-      const { valid } = await this.$refs.form.validate();
-
-      const profile = {
-        name: this.fullName(),
-        email: this.newProfile.email,
-      };
-
-      if (this.isPhone && this.newProfile.phoneNumber) {
-        profile.phoneNumber = this.newProfile.phoneNumber;
-      }
-
-      if (valid) {
-        this.$emit("submitQuery", profile);
-      }
-    },
-
-    fullName(v) {
-      if (v) {
-        const names = v.split(" ");
-
-        this.newProfile.lastName = names[0];
-        this.newProfile.firstName = names[1];
-        this.newProfile.middleName = names[2];
-      } else {
-        const lastName = this.newProfile.lastName || localStorage.lastName;
-        const firstName = this.newProfile.firstName || localStorage.firstName;
-        const middleName =
-          this.newProfile.middleName || localStorage.middleName;
-
-        return `${lastName} ${firstName} ${middleName}`;
-      }
-    },
   },
 };
 </script>

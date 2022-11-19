@@ -37,6 +37,8 @@ export function useFormRules(isPhone) {
     rules[key].push(result);
   }
 
+  rules.email.push(validateException);
+
   if (!isPhone) {
     rules.name.push(validateException);
     rules.phoneNumber.push(validateException);
