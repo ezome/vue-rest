@@ -1,30 +1,18 @@
-const fullName = (newProfile, currentProfile) => {
-  const lastName = newProfile.lastName || currentProfile.lastName;
-  const firstName = newProfile.firstName || currentProfile.lastName;
-  const middleName = newProfile.middleName || currentProfile.lastName;
+import { ref } from "vue";
 
-  return `${lastName} ${firstName} ${middleName}`;
-};
+export default function useForm(newProfile, emit) {
+  const form = ref(null);
 
-export function useForm(isPhone, form, newProfile, currentProfile, emit) {
-  const createQuery = async () => {
+  const submitQuery = async () => {
     const { valid } = await form.value.validate();
 
-    const profile = {
-      name: fullName(newProfile, currentProfile),
-      email: newProfile.email,
-    };
-
-    if (isPhone && newProfile.phoneNumber) {
-      profile.phoneNumber = newProfile.phoneNumber;
-    }
-
     if (valid) {
-      emit("submitQuery", profile);
+      emit("submitQuery", newProfile);
     }
   };
 
   return {
-    createQuery,
+    form,
+    submitQuery,
   };
 }

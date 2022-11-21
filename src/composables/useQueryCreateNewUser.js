@@ -1,7 +1,7 @@
 import { ref, onMounted } from "vue";
 import { createNewUserApi } from "@/api/user";
 
-export function useCreateNewUser() {
+export default function useCreateNewUser() {
   const show = ref(false);
 
   const create = async (profile) => {

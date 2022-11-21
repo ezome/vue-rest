@@ -2,7 +2,10 @@
 node_modules
 /dist
 
+useFormValidate.js
+helpers
 services
+
 
 # local env files
 .env.local

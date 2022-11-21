@@ -25,7 +25,9 @@ class Request {
   };
 
   update = (data) => {
-    const headers = { Authorization: this.token };
+    const headers = {
+      Authorization: this.token,
+    };
 
     return this.request.patch(this.url, data, { headers });
   };

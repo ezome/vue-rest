@@ -13,6 +13,8 @@ const ruleParse = {
   },
 };
 
+ruleParse.nameException = ruleParse.name;
+
 const validateExpression = (value, regexp, errorMessage) => {
   if (value?.length === 0 || regexp.test(value)) return true;
 
@@ -21,9 +23,10 @@ const validateExpression = (value, regexp, errorMessage) => {
 
 const validateException = (value) => value?.length > 0 || "Обязательное поле";
 
-export function useFormRules(isPhone) {
+export default function useFormRules(isAuth) {
   const rules = {
     name: [],
+    nameException: [],
     email: [],
     phoneNumber: [],
   };
@@ -39,7 +42,7 @@ export function useFormRules(isPhone) {
 
   rules.email.push(validateException);
 
-  if (!isPhone) {
+  if (!isAuth) {
     rules.name.push(validateException);
     rules.phoneNumber.push(validateException);
   }

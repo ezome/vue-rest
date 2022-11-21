@@ -1,18 +1,18 @@
 <template>
-  <v-form ref="form" @submit.prevent="createQuery" lazy-validation>
+  <v-form ref="form" @submit.prevent="submitQuery" lazy-validation>
     <v-text-field
-      v-model.trim="newProfile.lastName"
+      v-model.trim="lastName"
       :rules="rules.name"
       label="lastName"
     ></v-text-field>
     <v-text-field
-      v-model.trim="newProfile.firstName"
+      v-model.trim="firstName"
       :rules="rules.name"
       label="firstName"
     ></v-text-field>
     <v-text-field
-      v-model.trim="newProfile.middleName"
-      :rules="rules.name"
+      v-model.trim="middleName"
+      :rules="rules.nameException"
       label="middleName"
     ></v-text-field>
     <v-text-field
@@ -21,7 +21,7 @@
       :rules="rules.email"
       label="E-mail"
     ></v-text-field>
-    <template v-if="isPhone">
+    <template v-if="isAuth">
       <v-text-field
         type="tel"
         v-maska="'+7 (###) ### ##-##'"
@@ -35,33 +35,41 @@
 </template>
 
 <script>
-import { useFormRules } from "@/composables/useFormRules";
-import { useFormValues } from "@/composables/useFormValues";
-import { useForm } from "@/composables/useForm";
+import useFormRules from "@/composables/useFormRules";
+import useFormConvert from "@/composables/useFormConvert";
+import useForm from "@/composables/useForm";
 
 export default {
   props: {
-    isPhone: Boolean,
-    profile: Object,
+    isAuth: Boolean,
+    profile: {
+      type: Object,
+      default() {
+        return {
+          name: "",
+          email: "",
+        };
+      },
+    },
   },
 
   setup(props, context) {
-    const { form, newProfile, currentProfile } = useFormValues(props.profile);
-
-    const { rules } = useFormRules(props.isPhone);
-
-    const { createQuery } = useForm(
-      form,
-      newProfile,
-      currentProfile,
-      context.emit
+    const { lastName, firstName, middleName, newProfile } = useFormConvert(
+      props.profile
     );
 
+    const { rules } = useFormRules(props.isAuth);
+
+    const { form, submitQuery } = useForm(newProfile, context.emit);
+
     return {
+      lastName,
+      firstName,
+      middleName,
       form,
       rules,
       newProfile,
-      createQuery,
+      submitQuery,
     };
   },
 };
